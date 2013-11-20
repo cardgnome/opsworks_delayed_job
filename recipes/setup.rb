@@ -1,12 +1,12 @@
 # Adapted from unicorn::rails: https://github.com/aws/opsworks-cookbooks/blob/master/unicorn/recipes/rails.rb
 
-include_recipe "opsworks_delayed_job::service"
+include_recipe "delayed_job::service"
 
 # setup delayed_job service per app
 node[:deploy].each do |application, deploy|
   
   if deploy[:application_type] != 'rails'
-    Chef::Log.debug("Skipping opsworks_delayed_job::setup application #{application} as it is not a Rails app")
+    Chef::Log.debug("Skipping delayed_job::setup application #{application} as it is not a Rails app")
     next
   end
 

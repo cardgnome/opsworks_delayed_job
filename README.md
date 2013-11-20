@@ -40,11 +40,11 @@ OpsWorks Set-Up
 
 The layer's custom chef recipes should be associated with events as follows:
 
-* **Setup**: `opsworks_delayed_job::setup`
-* **Configure**: `opsworks_delayed_job::configure`
-* **Deploy**: `opsworks_delayed_job::deploy`
-* **Undeploy**: `opsworks_delayed_job::undeploy`
-* **Shutdown**: `opsworks_delayed_job::stop`
+* **Setup**: `delayed_job::setup`
+* **Configure**: `delayed_job::configure`
+* **Deploy**: `delayed_job::deploy`
+* **Undeploy**: `delayed_job::undeploy`
+* **Shutdown**: `delayed_job::stop`
 
 
 To Do

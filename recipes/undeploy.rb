@@ -4,7 +4,7 @@ include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
   if deploy[:application_type] != 'rails'
-    Chef::Log.debug("Skipping opsworks_delayed_job::undeploy application #{application} as it is not an Rails app")
+    Chef::Log.debug("Skipping delayed_job::undeploy application #{application} as it is not an Rails app")
     next
   end
 

@@ -5,7 +5,7 @@ include_recipe 'deploy'
 node[:deploy].each do |application, deploy|
 
   if deploy[:application_type] != 'rails'
-    Chef::Log.debug("Skipping opsworks_delayed_job::deploy application #{application} as it is not an Rails app")
+    Chef::Log.debug("Skipping delayed_job::deploy application #{application} as it is not an Rails app")
     next
   end
 
@@ -15,7 +15,7 @@ node[:deploy].each do |application, deploy|
     path deploy[:deploy_to]
   end
 
-  include_recipe "opsworks_delayed_job::setup"
+  include_recipe "delayed_job::setup"
 
   template "#{deploy[:deploy_to]}/shared/config/memcached.yml" do
     cookbook "rails"
