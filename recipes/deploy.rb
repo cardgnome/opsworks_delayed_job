@@ -1,6 +1,6 @@
 # Adapted from deploy::rails: https://github.com/aws/opsworks-cookbooks/blob/master/deploy/recipes/rails.rb
 
-include_recipe 'deploy'
+# include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
 
@@ -9,27 +9,57 @@ node[:deploy].each do |application, deploy|
     next
   end
 
-  opsworks_deploy_dir do
-    user deploy[:user]
-    group deploy[:group]
-    path deploy[:deploy_to]
+  unless node[:opsworks][:instance][:layers].include? "rails-app"
+
+    opsworks_deploy_dir do
+      user deploy[:user]
+      group deploy[:group]
+      path deploy[:deploy_to]
+    end
+
+    opsworks_rails do
+      deploy_data deploy
+      app application
+    end
+
+    opsworks_deploy do
+      deploy_data deploy
+      app application
+    end
+
   end
 
-  include_recipe "delayed_job::setup"
+  # opsworks_deploy_dir do
+  #   user deploy[:user]
+  #   group deploy[:group]
+  #   path deploy[:deploy_to]
+  # end
 
-  template "#{deploy[:deploy_to]}/shared/config/memcached.yml" do
-    cookbook "rails"
-    source "memcached.yml.erb"
-    mode 0660
-    owner deploy[:user]
-    group deploy[:group]
-    variables(:memcached => (deploy[:memcached] || {}), :environment => deploy[:rails_env])
+  # include_recipe "delayed_job::setup"
+
+  # template "#{deploy[:deploy_to]}/shared/config/memcached.yml" do
+  #   cookbook "rails"
+  #   source "memcached.yml.erb"
+  #   mode 0660
+  #   owner deploy[:user]
+  #   group deploy[:group]
+  #   variables(:memcached => (deploy[:memcached] || {}), :environment => deploy[:rails_env])
+  # end
+  
+  # node.set[:opsworks][:rails_stack][:restart_command] = node[:delayed_job][application][:restart_command]
+
+  execute "restart Delayed Job processes for app #{application}" do
+    cwd deploy[:current_path]
+    command node[:delayed_job][application][:restart_command]
+    action :run
+    
+    only_if do 
+      File.exists?(deploy[:current_path])
+    end
   end
   
-  node.set[:opsworks][:rails_stack][:restart_command] = node[:delayed_job][application][:restart_command]
-  
-  opsworks_deploy do
-    deploy_data deploy
-    app application
-  end
+  # opsworks_deploy do
+  #   deploy_data deploy
+  #   app application
+  # end
 end
