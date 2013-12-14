@@ -2,10 +2,10 @@ include_attribute "deploy"
 
 default[:delayed_job] = {}
 default[:delayed_job][:pool_size] = case node[:opsworks][:instance][:instance_type]
-	when 'm1.small' then 2
-	when 'c1.medium' then 4
+	when 'm1.small' then 1
+	when 'c1.medium' then 2
 	when 'c1.xlarge' then 8
-	when 'm1.large' then 8
+	when 'm1.large' then 4
 	else 
 	  2
 end
