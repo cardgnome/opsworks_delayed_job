@@ -1,6 +1,7 @@
 # Adapted from deploy::rails: https://github.com/aws/opsworks-cookbooks/blob/master/deploy/recipes/rails.rb
 
 # include_recipe 'deploy'
+include_recipe "delayed_job::setup"
 
 node[:deploy].each do |application, deploy|
 
